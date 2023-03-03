@@ -1,0 +1,250 @@
+type Query {
+  me: Profile
+  user(id: ID!): Profile
+  hoh: Int
+  wallet_balance(walletId: String!): WalletBalanceResponse
+  wallet_history(walletId: String!): String
+  random: String!
+  server_time: String
+  game(addr: String!): Game
+  user_profile(input: Web3AuthProfile): ProfileResponse
+  gamebank_overview(input: GamebankOverviewInput!): GamebankOverviewResponse
+  gamebank_history(input: GamebankHistoryInput!): [UserGameBankHistory]
+}
+
+type Mutation {
+  join_init(wallet_address: String!): String
+  join(input: JoinInput!): JoinResponse
+  wallet_bet(input: WalletBetInput): CommonResponse
+  wallet_win(input: WalletWinInput): CommonResponse
+  deposit(tx: String!, amount: Int!): CommonResponse
+  join_server_game(public_key: String!): String
+  transaction_bcr(input: TransactionBcrInput!): TransactionBcrResponse
+  transaction_mpok(input: TransactionMpokInput!): TransactionMpokResponse
+  gamebank_deposit(input: GamebankDepositInput!): GamebankOverviewResponse
+  gamebank_withdraw(input: GamebankWithdrawInput!): GamebankOverviewResponse
+}
+
+type Subscription {
+  hello: String
+}
+
+"""
+Date custom scalar type
+"""
+scalar Date
+
+type Game {
+  id: ID
+  name: String
+  public_key: String
+  init_game_bank: Int
+  game_bank: Int
+  created_at: Date
+  updated_at: Date
+}
+
+input TransactionBcrInput {
+  playerWalletId: ID
+  outcomeBanker: Int
+  outcomePlayer: Int
+  outcomeTie: Int
+  outcomePlayerPair: Int
+  outcomeBankerPair: Int
+}
+
+input TransactionMpokInput {
+  playerWalletId: ID
+  betAmount: Float
+}
+
+type TransactionBcrResponse {
+  cards: [String]
+  playerPoint: Int
+  bankerPoint: Int
+  winOutcome: String
+  winAmount: Float
+  profitAmount: Float
+  gb: Float
+  winModes: WinModesBcr
+}
+
+type TransactionMpokResponse {
+  cards: [String]
+  winType: Int
+  winMultiplier: Float
+  winAmount: Float
+  profitAmount: Float
+  gb: Float
+  jp: Float
+}
+
+type WinModesBcr {
+  player: Float
+  banker: Float
+  tie: Float
+  playerPair: Float
+  bankerPair: Float
+}
+
+input GamebankOverviewInput {
+  userId: String
+  game: String
+  symbol: String
+}
+
+input GamebankHistoryInput {
+  game: String
+  symbol: String
+}
+
+input GamebankDepositInput {
+  userId: String
+  game: String
+  symbol: String
+  amount: Int
+}
+
+input GamebankWithdrawInput {
+  userId: String
+  game: String
+  symbol: String
+  amount: Int
+}
+
+type GamebankOverviewResponse {
+  game: String
+  symbol: String
+  balance: Float
+  investMax: Float
+  userInvestAmount: Float
+  userShareRatio: Float
+  userUnrealizedProfit: Float
+  hostInvestAmount: Float
+  hostShareRatio: Float
+  hostUnrealizedProfit: Float
+  jackpots: [Float]
+}
+
+type UserGameBankHistory {
+  userId: String
+  createdAt: String
+  amount: Float
+  direction: Int
+  shareRatio: Float
+}
+
+type JoinResponse {
+  error: Int!
+  message: String
+  user: Profile
+  access_token: String
+}
+
+type WalletBalanceResponse {
+  walletId: String
+  currentBalance: Float
+  requestId: String
+  responseId: String
+  accepted: Boolean
+  message: String
+  messageCode: Int
+}
+
+input WalletBetInput {
+  walletId: ID
+  betAmount: Float
+  symbol: String
+}
+
+input WalletWinInput {
+  walletId: ID
+  prize: Float
+  symbol: String
+}
+
+input Web3AuthProfile {
+  aggregateVerifier: String
+  dappShare: String
+  email: String
+  idToken: String
+  name: String
+  oAuthAccessToken: String
+  oAuthIdToken: String
+  profileImage: String
+  typeOfLogin: String
+  verifier: String
+  verifierId: String
+}
+
+type ProfileResponse {
+  requestId: String
+  responseId: String
+  accepted: Boolean
+  message: String
+  messageCode: Int
+  userProfile: UserProfile
+}
+
+type UserProfile {
+  id: String
+  userId: String
+  createDate: Date
+  verifierId: String
+  name: String
+  userName: String
+  wallets: [UserWallet]
+}
+
+type UserWallet {
+  walletId: String
+  balance: Int
+  name: String
+  currencyCode: String
+  status: Int
+  type: Int
+}
+
+type Profile {
+  id: ID
+  wallet_address: String
+  auth_by: String
+  display_name: String
+  avatar_url: String
+  email: String
+  created_at: Date
+  updated_at: Date
+  hoh: Int
+  wo: Int
+  trans: [Transaction]
+}
+
+input JoinInput {
+  refId: ID
+  wallet_address: String!
+  message: String
+  signature: String!
+  public_key: String
+}
+
+type CommonResponse {
+  error: Int!
+  message: String
+  value: String
+}
+
+type Transaction {
+  tx_id: ID
+  game_id: ID
+  hoh_before: Int
+  hoh_amount: Int
+  hoh_after: Int
+  tran_scr: String
+  created_at: Date
+  status: Int
+}
+
+type PubUserBet {
+  id: ID
+  amount: Int
+}

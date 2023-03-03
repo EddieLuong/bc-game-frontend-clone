@@ -1,11 +1,11 @@
 import React from 'react';
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import MuiDialog from '@mui/material/Dialog';
+import Grow from '@mui/material/Grow';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MuiDialog from '@mui/material/Dialog';
 import { CloseBox, DialogBody, DialogHeader, DialogWrapper } from './styles';
-import Grow from '@mui/material/Grow';
 
 interface DialogProps {
   title: string;
