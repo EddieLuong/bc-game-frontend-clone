@@ -46,3 +46,5 @@ export const COIN_LIST = [
     image: satsCoin,
   },
 ];
+
+export const API_URI = 'https://api.metahouse.casino:5000/graphql';
